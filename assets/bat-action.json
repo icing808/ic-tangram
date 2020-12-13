@@ -1,0 +1,27 @@
+{
+
+"images": [
+    "bat-action.png"
+],
+
+"framerate": 20,
+"frames": [
+    [0, 0, 609, 249, 0, 0, 0],
+    [609, 0, 609, 249, 0, 0, 0],
+    [1218, 0, 609, 249, 0, 0, 0],
+    [1827, 0, 609, 249, 0, 0, 0]
+],
+
+"animations": {
+    "bat": { "frames": [0] },
+    "bat2": { "frames": [1] },
+    "bat3": { "frames": [2] },
+    "bat4": { "frames": [3] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:37aae517902ae4da503e086a45b9eebb:e0b85a500132645e17b78102cdb1008b:2d444de725fb44f7b750de3e77e8d8bc$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

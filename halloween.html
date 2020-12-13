@@ -26,8 +26,8 @@ const width = 1024;
 const height = 768;
 const color = light; // ZIM colors like green, blue, pink, faint, clear, etc.
 const outerColor = dark; // any HTML colors like "violet", "#333", etc. are fine to use
-const assets = ["halloween.png","bat.png", "bat2.png", "bat3.png", "sign.png","arrow.png", "rooster.png",
-                "correct.mp3","error.mp3","halloween-bg-music.wav",
+const assets = ["halloween.png","bat.png", "bat-action.png", "sign.png","arrow.png", "rooster.png",
+                "correct.mp3","error.mp3","halloween-bg-music.wav", "bat-action.json",
                 {font:"OrangeSlices",src:"Orange-Slices.otf"}];
 const path = "assets/";
 
@@ -84,8 +84,8 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
           .sca(.7)
           .pos(80,50,LEFT,BOTTOM)
           .change(function(e) { // this will start off
-            zog(soundBG);
-            zog(e.target.toggled);
+            // zog(soundBG);
+            // zog(e.target.toggled);
             if(e.target.toggled == true){
               if (!soundBG){
                 soundBG = asset("halloween-bg-music.wav").play({volume:.3, loop:true});
@@ -420,19 +420,18 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
                      }
              });
       }, true);
-
       stage.update();
     }
 
 
     function makeAnimation(){
       var star = new Emitter({
-        obj:new Poly(20,5,.6, [pink, red, green, orange, blue]),
+        obj:new Poly(20,5,.6, [yellow, red, blue, purple, green, black]),
         num:5,
       }).center();
       soundC = asset("correct.mp3").play();
 
-      //.ord(1)
+
       timeout(1.5, ()=>{
         loop(reference, ref =>{
           ref.animate({
@@ -441,16 +440,20 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
           });
         }, true);
 
-      animal = asset("bat.png").addTo();
-      animal.centerReg().mov(0,-50).sca(.1).alp(.3)
+      animal = new Sprite({json:asset("bat-action.json")})
+      .centerReg()
+      .mov(0,-50)
+      .sca(.1)
+      .alp(.3)
       .animate({
-        props:{alpha:1,scale:1,y:500},
-        loop:true,
-        rewind:true,
-        wait:.5,
-        rewindWait:.5,
+        props:{alpha:1,scale:1,y:460},
+        //loop:true,
+        //rewind:true,
+        //wait:.5,
+        //rewindWait:1.5,
         time:2
-      });
+      }).run({loop:true});
+
       toggleM.top().ord(1);
       background.animate({
         props:{alpha:1},
