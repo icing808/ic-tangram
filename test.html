@@ -1,5 +1,295 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head></head>
-    <body>hello everyone  IC group</body>
+<head>
+<meta charset="utf-8" />
+<title>ZIM - Code Creativity</title>
+
+<!-- Welcome to ZIM at https://zimjs.com - Code Creativity!                              -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS https://createjs.com -->
+<!-- ZIM is free to use. You can donate to help improve ZIM at https://zimjs.com/donate  -->
+
+<script src="https://zimjs.org/cdn/1.3.2/createjs.js"></script>
+<script src="https://zimjs.org/cdn/cat/02/zim.js"></script>
+<!-- use zimjs.com/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+const scaling = "fit"; // this will resize to fit inside the screen dimensions
+const width = 1024;
+const height = 768;
+const color = light; // ZIM colors like green, blue, pink, faint, clear, etc.
+const outerColor = dark; // any HTML colors like "violet", "#333", etc. are fine to use
+
+const frame = new Frame(scaling, width, height, color, outerColor);
+frame.on("ready", () => { // ES6 Arrow Function - like function(){}
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    const stage = frame.stage;
+    let stageW = frame.width;
+    let stageH = frame.height;
+
+    // see https://zimjs.com/learn.html for video and code tutorials
+    // see https://zimjs.com/docs.html for documentation
+    // see https://zimjs.com/bits.html for 64 Interactive Media techniques
+
+    // *** NOTE: ZIM Cat defaults to time in seconds
+    // All previous versions, examples, videos, etc. have time in milliseconds
+    // This can be set back with TIME = "milliseconds" but we suggest you give it a try!
+    // There will be a warning in the conslole if your animation is not moving ;-)
+
+    // put your code here (you can delete this sample code)
+
+    // with chaining - can also assign to a variable for later access
+//     var rect = new Rectangle(200, 100, "blue");
+//   rect.center().outline();
+//
+//   var circle = new Circle(50, "red");
+// circle.center().outline();
+
+
+var tri = new Triangle(200, null, null, "green");
+tri.reg(46,98).pos(150,150).outline();
+//
+//
+//
+var tri2 = new Triangle(200, null, null, "yellow");
+tri2.alp(.5).pos(100,200,CENTER,BOTTOM).drag();
+
+
+const r3 = new Rectangle(100, 100, orange).reg(50).pos(150,150,RIGHT).outline();
+//
+tri2.tap(e => {
+    tri2.rotation += 45;
+    stage.update();
+});
+
+const circleDPoints = [[0,-100,0,0,0,0,0,0,"none"],
+[50.5,90.1,0,0,0,0,0,0,"none"],
+[-52.5,90.1,0,0,0,0,0,0,"none"]];
+
+const circleD = new Blob({points:circleDPoints,interactive:false})
+      .transformPoints("rotation", -45)
+       .pos(15, -22, CENTER, CENTER).drag();
+
+
+       const circleEPoints = [[0,-100,0,0,0,0,0,0,"none"],
+       [50.5,90.1,0,0,0,0,0,0,"none"],
+       [-52.5,90.1,0,0,0,0,0,0,"none"]];
+
+
+const circleE = new Blob({points:circleEPoints,
+                          interactive:true,
+                          showControls:false,
+                          lockControls:true,
+                          lockControlType:true,
+                          editPoints:false,
+                          color:red})
+                .transformPoints("rotation", 180)
+                .alp(.5)
+                .pos(50,50,true,true);
+
+                zogr(circleE.pointObjects[1][0].x);
+                zogr(circleE.pointObjects[1][0].y);
+
+                zogg(circleD.pointObjects[1][0].x);
+                zogg(circleD.pointObjects[1][0].y);
+
+
+
+                circleE.tap(e => {
+                    //circleE.rotation += 45;
+                    var rotation = circleE.rotation+45;
+                    circleE.transformPoints("rotation", rotation);
+                    zogg(circleD.pointObjects[0][0].x);
+                    zogg(circleD.pointObjects[0][0].y);
+
+                    //    zogr(circleE.pointObjects[0][0].x);
+                    //    zogr(circleE.pointObjects[0][0].y);
+                    zogr(circleE.pointObjects[0][0].x);
+                    zogr(circleE.pointObjects[0][0].y);
+                    stage.update();
+                });
+
+
+                circleE.on("pressup", () => {
+                // is first circle hitting last circle
+                if (circleE.pointCircles[0].hitTestCircles(circleD.pointCircles[0])
+                    && circleE.pointCircles[1].hitTestCircles(circleD.pointCircles[1])
+                    && circleE.pointCircles[2].hitTestCircles(circleD.pointCircles[2]) ){
+                    zogr("3=yes");
+                    circleE.noTap();
+                    circleE.noDrag();
+                }else{
+                  zogr("3=no");
+                }
+
+                // if (squiggle.pointCircles[0].hitTestCircles(squiggle.pointCircles[squiggle.pointCircles.length-1])) {
+                //
+                // }
+            });
+
+                // circleE.on("pressmove", function(){
+                //   if ( circleE.hitTestPath(circleD, 6, true) ){
+                //     // if(redShape.x == redRef.x){
+                //     //   zogr("4=yes");
+                //     // }
+                //     zogb(circleD.pointObjects[0][0].x);
+                //     zogb(circleD.pointObjects[0][0].y);
+                //
+                //     zogr(circleE.pointObjects[0][0].x);
+                //     zogr(circleE.pointObjects[0][0].y);
+                //
+                //     if(circleE.pointObjects[0][0].y < 0.1 || (0-circleE.pointObjects[0][0].y) < 0.1){
+                //       zogr("Yes");
+                //     }
+                //
+                //
+                //
+                //    //  if((
+                //    //      (circleD.pointObjects[0][0].x < circleE.pointObjects[0][0].x+0.02
+                //    //      && circleD.pointObjects[0][0].x > circleE.pointObjects[0][0].x-0.02)
+                //    //    || (circleD.pointObjects[0][0].x < (0 - circleE.pointObjects[0][0].x+0.02)
+                //    //        && circleD.pointObjects[0][0].x > (0 - circleE.pointObjects[0][0].x-0.02))
+                //    //    || (circleD.pointObjects[0][0].x < circleE.pointObjects[0][0].y+0.02
+                //    //        && circleD.pointObjects[0][0].x > circleE.pointObjects[0][0].y-0.02)
+                //    //    || (circleD.pointObjects[0][0].x < (0 - circleE.pointObjects[0][0].y+0.02)
+                //    //        && circleD.pointObjects[0][0].x > (0 - circleE.pointObjects[0][0].y-0.02))
+                //    //    )
+                //    //  || (
+                //    //     circleD.pointObjects[0][0].y == circleE.pointObjects[0][0].x
+                //    //    || circleD.pointObjects[0][0].y == (0 - circleE.pointObjects[0][0].x)
+                //    //    || circleD.pointObjects[0][0].y == circleE.pointObjects[0][0].y
+                //    //    || circleD.pointObjects[0][0].y == (0 - circleE.pointObjects[0][0].y)
+                //    //   )
+                //    // ){
+                //    //    zogr("4=yes");
+                //    //    circleE.noTap();
+                //    //    circleE.noDrag();
+                //    //  }
+                //
+                //     //
+                //     // if(tri2.x < (tri.x+2) && tri2.x > (tri.x-2) && (tri.shape == tri2.shape)){
+                //     //   zogr("3=yes");
+                //     //   tri2.noDrag();
+                //     // }
+                // zogr("3=yes");
+                //
+                //
+                //   }else{
+                //     zogr("3=NO");
+                //   }
+                // });
+
+       // circleD.on("mousedown", function () {
+       //                 tri.level = circleD.level-1
+       //             });
+
+
+
+frame.on("keydown", e => {
+        // zog(e.keyCode);
+        if (e.keyCode == 32) { // spacebar
+            circleE.recordPoints(true); // use a pane to show points
+        }
+    });
+
+    frame.on("keydown", e => {
+            // zog(e.keyCode);
+            if (e.keyCode == 65) { // spacebar
+                circleD.recordPoints(true); // use a pane to show points
+            }
+        });
+
+// tri2.on("pressmove", function(){
+//   if ( tri2.hitTestBounds(tri) ){
+//     // if(redShape.x == redRef.x){
+//     //   zogr("4=yes");
+//     // }
+//
+//     zogr("tri.x"+tri.x);
+//     zogg("tri2.x"+tri2.x);
+//     zogr("tri.y"+tri.y);
+//     zogg("tri2.y"+tri2.y);
+//     zogr("3=yes");
+//   }else{
+//     zogr("3=NO");
+//   }
+// });
+
+
+
+
+// zogg(tri.points);
+// zogg(tri2.shape);
+//
+tri2.on("pressup", function(){
+  zogg(tri.a);
+  zogr(tri2.a);
+  if ( tri2.hitTestBounds(tri) ){
+    // if(redShape.x == redRef.x){
+    //   zogr("4=yes");
+    // }
+    zogg(tri.x);
+    zogg(tri.y);
+
+    zogr(tri2.x);
+    zogr(tri2.y);
+
+    if(tri2.x < (tri.x+2) && tri2.x > (tri.x-2)
+      && tri2.y < (tri.y+2) && tri2.y > (tri.y-2)){
+      zogr("4=yes");
+      tri2.noDrag();
+      tri2.noTap();
+    }else{
+      zogr("4=NO");
+    }
+
+
+
+  }else{
+    zogr("3=NO");
+  }
+});
+
+// let blob = new Blob({
+//                 points:3,
+//                 color:faint,
+//                 controlType:"none"
+//             }).center();
+//
+//             blob.pic = tri2;
+//             tri2.setMask(blob);
+//             blob.on("mousedown", function () {
+//                 tri2.level = blob.level-1
+//             });
+//             blob.on("pressmove", function () {
+//                 tri2.loc(blob.shape);
+//             });
+
+
+    // without chaining
+    // const circle = new Circle(100, pink);
+    // circle.center();
+    // circle.drag();
+
+    stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
 </html>

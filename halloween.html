@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM - Code Creativity</title>
+
+<!-- Welcome to ZIM at https://zimjs.com - Code Creativity!                              -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS https://createjs.com -->
+<!-- ZIM is free to use. You can donate to help improve ZIM at https://zimjs.com/donate  -->
+
+<script src="https://zimjs.org/cdn/1.3.2/createjs.js"></script>
+<script src="https://zimjs.org/cdn/cat/02/zim.js"></script>
+<!-- use zimjs.com/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+const scaling = "fit"; // this will resize to fit inside the screen dimensions
+const width = 1024;
+const height = 768;
+const color = light; // ZIM colors like green, blue, pink, faint, clear, etc.
+const outerColor = dark; // any HTML colors like "violet", "#333", etc. are fine to use
+const assets = ["halloween.png","bat.png", "sign.png","arrow.png", "rooster.png",{font:"OrangeSlices",src:"Orange-Slices.otf"},{font:"OrangeSlicesOtline",src:"Orange-Slices-Otline.otf"}];
+const path = "assets/";
+
+const frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+frame.on("ready", () => { // ES6 Arrow Function - like function(){}
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    const stage = frame.stage;
+    let stageW = frame.width;
+    let stageH = frame.height;
+
+    // USE THESE VARIABLES WHEN NEEDED BELOW
+    let background;
+    let box;
+
+    //The variables of the basic shapes, total 10 pieces
+    let redShape;     let orangeShape;      let yellowShape;      let greenShape;     let cyanShape;
+    let blueShape;    let purpleShape;      let pinkShape;        let blackShape;     let brownShape;
+
+    let redRef;     let orangeRef;      let yellowRef;      let greenRef;     let cyanRef;
+    let blueRef;    let purpleRef;      let pinkRef;        let blackRef;     let brownRef;
+
+    const angle = 45;
+    //step1: load the background img
+    loadBackgroud();
+    function loadBackgroud(){
+      background = asset("halloween.png");
+      background.centerReg().mov(0,-100).sca(0).alp(0)
+      .animate({
+        props:{alpha:.3,scale:1},
+        time:2,
+        call: makeRefShape
+      });
+      stage.update();
+    } // end step1
+
+
+    //Step2: make a bat for reference
+    function makeRefShape(){
+
+      redRef = new Triangle({
+        a:98.925,
+        b:70.2748,
+        c:70.2748,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().rot(angle * 2).loc(450,320).outline();
+
+      orangeRef = new Triangle({
+        a:98.925,
+        b:70.2748,
+        c:70.2748,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().rot(angle * 6).loc(500,320);
+
+      blueRef = new Rectangle({
+        width:69.951,
+        height:69.951,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().rot(angle).loc(475,370);
+
+      pinkRef = new Rectangle({
+        width:69.951,
+        height:69.951,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().loc(475,454);
+
+      greenRef = new Triangle({
+        a:197.851,
+        b:140.0748,
+        c:140.0748,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().loc(342,408);
+
+      cyanRef = new Triangle({
+        a:197.851,
+        b:140.0748,
+        c:140.0748,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().loc(608,408);
+
+      yellowRef = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().rot(angle * 4).loc(244,476);
+
+      brownRef = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().rot(angle * 4).loc(704,476);
+
+      purpleRef = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().loc(440,508);
+
+      blackRef = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"white",
+        borderColor:"green",
+        dashed:[10,5]
+      }).alp(.5).centerReg().loc(510,508);
+
+      stage.update();
+
+      makeShapeMoulde();
+
+    } //end step2
+
+    //step3: make the basic shape
+    function makeShapeMoulde(){
+      box = new Container(200,200).centerReg().loc(800,117);
+      redShape = new Triangle({
+        a:98.925,
+        b:70.2748,
+        c:70.2748,
+        color:"red",
+        borderColor:"dark",
+      }).centerReg().rot(angle * 4).drag().center(box);
+
+      orangeShape = new Triangle({
+        a:98.925,
+        b:70.2748,
+        c:70.2748,
+        color:"orange",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 4).drag().center(box).mov(98.925,0);
+
+      blueShape = new Rectangle({
+        width:69.951,
+        height:69.951,
+        color:"CornflowerBlue",
+        borderColor:"dark"
+      }).centerReg().rot(angle).drag().center(box).mov(49.4625,25);
+
+      greenShape = new Triangle({
+        a:197.851,
+        b:140.0748,
+        c:140.0748,
+        color:"green",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 2).drag().center(box).mov(-0.5,75);
+
+      cyanShape = new Triangle({
+        a:197.851,
+        b:140.0748,
+        c:140.0748,
+        color:"cyan",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 6).drag().center(box).mov(98.925,75);
+
+      yellowShape = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"yellow",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 3).drag().center(box).mov(-12,161.851);
+
+      purpleShape = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"purple",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 5).drag().center(box).mov(13,163.851);
+
+      pinkShape = new Rectangle({
+        width:69.951,
+        height:69.951,
+        color:"pink",
+        borderColor:"dark"
+      }).centerReg().rot(angle).drag().center(box).mov(50,125);
+
+      blackShape = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"black",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 3).drag().center(box).mov(87,163);
+
+      brownShape = new Triangle({
+        a:69.952,
+        b:49.7493,
+        c:49.7493,
+        color:"greenYellow",
+        borderColor:"dark"
+      }).centerReg().rot(angle * 5).drag().center(box).mov(112,163);
+
+      sign = asset("sign.png").center().sca(.1).loc(816,300).alp(0)
+        .animate({
+          props:{alpha:1},
+          time:.2,
+          rewind:true,
+          rewindWait:1,
+          loop:true,
+          loopWait:.2,
+          loopCount:5,
+          ease:"backInOut",
+      });
+
+      arrow = asset("arrow.png").center().sca(.1).loc(574,150).rot(10).alp(.8)
+      .animate({
+        props:{alpha:0},
+        time:10,
+      });
+
+      instructions = new Label({
+        text:"moving shapes to form a tangram bat",
+        font:"OrangeSlices",
+        size:30,
+        lineWidth:40,
+        color:blue.darken(.3),
+        align:"center",
+      }).center().loc(842,380)
+      .animate({
+        props:{alpha:0},
+        time:15,
+      }).wiggle("rotation",0,2,5,1,1.5);
+
+      stage.update();
+
+      var pieces = [redShape, orangeShape, yellowShape, greenShape, cyanShape,
+                    blueShape, purpleShape, pinkShape, blackShape, brownShape];
+      loop(pieces, piece => {
+        piece.tap(e => {
+            piece.rotation += angle;
+            piece.level += 99;
+            stage.update();
+        });
+      });
+
+
+      addHitTestEvent();
+    } // end step3
+
+    //step4: Add hitTest events
+    function addHitTestEvent(){
+      redShape.points = 3;
+      redRef.points = 3;
+      zogr("1="+redShape.points);
+      zogr("2="+redRef.points);
+      redShape.on("pressmove", function(){
+        if ( redShape.hitTestPoint(redRef.x, redRef.y)) {
+          if(redShape.x == redRef.x){
+            zogr("4=yes");
+          }
+          zogr("3=yes");
+        }else{
+          zogr("3=NO");
+        }
+      });
+
+    }
+
+
+
+
+
+
+    stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>

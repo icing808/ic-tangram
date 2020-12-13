@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Group Project_Tangram</title>
+
+<script src="https://zimjs.org/cdn/1.3.2/createjs.js"></script>
+<script src="https://zimjs.org/cdn/cat/01/zim.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+const scaling = "fit"; // this will resize to fit inside the screen dimensions
+let width = 1024;
+let height = 768;
+const color = blue;
+const outerColor = darker;
+const assets = ["background.png","farm.jpg", "sign.png","arrow.png", "rooster.png",{font:"OrangeSlices",src:"Orange-Slices.otf"},{font:"OrangeSlicesOtline",src:"Orange-Slices-Otline.otf"}];
+const path = "assets/";
+var progress = new ProgressBar({foregroundColor:orange, backgroundColor:purple}).sca(2);
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+const frame = new Frame(scaling, width, height, color, outerColor, assets, path, progress);
+frame.on("ready", function() {
+
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+    const stage = frame.stage;
+    let stageW = frame.width;
+    let stageH = frame.height;
+
+    // 7 pieces of Tangram Builder
+
+    let background;    let animal;   let box;  let sign; let arrow; let instruction; let greenTri;    let orangeTri;
+    let purpleTri;    let redTri;    let blackTri;    let brownSqu;
+    let blueDia;    let pieces; //a array of those 7 pieces
+
+    let greenRef;    let orangeRef;    let purpleRef;    let redRef;
+    let blackRef;    let brownRef;    let blueRef;    let reference;
+
+
+
+    //put code here
+
+    //PART 1: making interface
+
+ 	  makeInterface();
+
+    function makeInterface() {
+			zog("makeInterface");
+
+      const start = asset("background.png").centerReg().sca(.5);
+      const text = new Label({
+        text:"TANGRAM PUZZLES",
+        font:"OrangeSlices",
+        color:"white",
+        shadowColor:dark,
+        align:"center"
+      }).sca(2).center();
+
+
+      const button = new Button({
+        label:"GO",
+        width:100,
+        height:100,
+        backgroundColor:orange,
+        rollBackgroundColor:blue,
+        shadowColor:darker,
+        corner:50,
+      }).centerReg().mov(0,100)
+      .animate({
+        props:{scale:.5},
+        time:1,
+        rewind:true,
+        rewindWait:2,
+        loop:true,
+        loopWait:2,
+        ease:"backInOut"
+      }).wiggle("rotation",0,2,5,1,1.5);
+
+      background = asset("farm.jpg");
+
+      button.on("click", ()=>{
+        button.removeFrom();
+        text.removeFrom();
+        start.removeFrom();
+        frame.color= white;
+        frame.outerColor = white;
+        background.centerReg().mov(0,-100).sca(0).alp(0)
+        .animate({
+          props:{alpha:.2, scale:.2},
+          time:2,
+          call: makeTans,
+          })
+      })
+
+      stage.update();
+
+		} // end makeInterface
+
+// PART2: making 7 "tans"
+
+    //makeTans();
+
+    function makeTans(){
+
+      box = new Container(200,200).centerReg().loc(932,117);
+
+      greenTri = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:"green",
+        borderColor:"dark"
+      }).centerReg().rot(180).drag().center(box);
+
+      orangeTri = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:"orange",
+        borderColor:"dark"
+      }).rot(-90).drag().center(box).mov(31,30);
+
+      purpleTri = new Triangle({
+        a:60,
+        b:60,
+        c:84.8524,
+        color:"purple",
+        borderColor:"dark"
+      }).center(box).rot(90).drag().mov(-30,60);
+
+      redTri = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:"red",
+        borderColor:"dark"
+      }).center(box).rot(-45).drag().mov(-30,30);
+
+          blackTri = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:"black",
+        borderColor:"dark"
+      }).center(box).rot(225).drag().mov(30,90);
+
+      brownSqu = new Rectangle (42.4264, 42.4264, "brown", "dark")
+      .center(box).rot(45).drag().loc(100,130);
+
+      //brownSqu.place(brownSqu);
+
+      blueDia = new Rectangle (42.4264, 60, "blue", "dark")
+      .center(box).ske(null,45).drag().loc(40,70);
+
+      makeShape();
+
+      sign = asset("sign.png").center().sca(.1).loc(908,226).alp(0)
+        .animate({
+          props:{alpha:1},
+          time:.2,
+          rewind:true,
+          rewindWait:1,
+          loop:true,
+          loopWait:.2,
+          loopCount:5,
+          ease:"backInOut",
+      })
+
+      arrow = asset("arrow.png").center().sca(.1).loc(674,216).rot(10).alp(.8)
+      .animate({
+        props:{alpha:0},
+        time:10,
+      });
+
+      instructions = new Label({
+        text:"moving tans to form a tangram rooster",
+        font:"OrangeSlices",
+        size:30,
+        lineWidth:40,
+        color:blue.darken(.3),
+        align:"center",
+      }).center().loc(942,308)
+      .animate({
+        props:{alpha:0},
+        time:15,
+      }).wiggle("rotation",0,2,5,1,1.5);
+
+      stage.update();
+
+    }//end makeTans
+
+
+// Part3: making target Shape
+
+    //makeShape()
+
+    function makeShape(){
+
+      greenRef = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:"white",
+        borderColor:"black",
+        dashed:[10,5]
+      }).alp(.8).centerReg().rot(-45).loc(517,462);
+
+
+      orangeRef = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:"white",
+        borderColor:"black",
+        dashed:[10,5]
+      }).alp(.8).centerReg().rot(45).loc(474,419);
+
+
+      purpleRef = new Triangle({
+        a:60,
+        b:60,
+        c:84.8524,
+        color:"white",
+        borderColor:"black",
+        dashed:[10,5]
+      }).alp(.8).centerReg().rot(-135).loc(454,397);
+
+      redRef = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:"white",
+        borderColor:"black",
+        dashed:[10,5]
+      }).alp(.8).centerReg().rot(-135).loc(570,397);
+
+
+      blackRef = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:"white",
+        borderColor:"grey",
+        dashed:[10,5]
+      }).alp(.8).centerReg().rot(135).loc(547,506);
+
+
+      brownRef = new Rectangle (42.4264, 42.4264, "white", "grey", null, null, [10,5]).alp(.8)
+              .centerReg().rot(0).loc(562,419);
+
+
+      blueRef = new Rectangle (60,42.4264,  "white", "grey",null,null, [10,5]).alp(.8)
+      .centerReg().ske(null,45).loc(430,440);
+
+
+      stage.update();
+
+    }//end makeShape
+
+
+
+
+
+    stage.update();
+
+}); // end of ready
+
+</script>
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
