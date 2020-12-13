@@ -1,0 +1,437 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Group Project_Tangram</title>
+
+<script src="https://zimjs.org/cdn/1.3.2/createjs.js"></script>
+<script src="https://zimjs.org/cdn/cat/01/zim.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+const scaling = "fit"; // this will resize to fit inside the screen dimensions
+let width = 1024;
+let height = 768;
+const color = blue;
+const outerColor = darker;
+const assets = ["background.png","farm.jpg", "sign.png","arrow.png", "restart.png","sound.wav",{font:"OrangeSlices",src:"Orange-Slices.otf"},"sprite.png","sprite.json"]
+const path="assets/";
+var progress = new ProgressBar({foregroundColor:orange, backgroundColor:purple}).sca(2);
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+const frame = new Frame(scaling, width, height, color, outerColor, assets, path, progress);
+frame.on("ready", function() {
+
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+    const stage = frame.stage;
+    let stageW = frame.width;
+    let stageH = frame.height;
+
+    let background;    let animal;
+    let sign; let arrow; let help; let instruction;
+
+    // 7 tans
+    let box;  let greenTri;    let orangeTri;
+    let purpleTri;    let redTri;    let blackTri;    let brownSqu;
+    let blueDia;    let pieces; //a array of tans
+
+    //7 target shapes
+
+    let box2; let greenRef;    let orangeRef;    let purpleRef;    let redRef;
+    let blackRef;    let brownRef;    let blueRef;    let reference;
+
+
+    let points;    let greenP1;    let greenP2;    let greenP3;
+    let orangeP1;    let orangeP2;    let orangeP3;    let purpleP1;
+    let purpleP2;    let purpleP3;    let redP1;    let redP2;
+    let redP3;    let blackP1;    let blackP2;    let blackP3;
+    let brownP1;    let brownP2;    let brownP3;    let blueP1;
+    let blueP2;    let blueP3;    let icon;    let restart; let sound;
+
+
+    //put code here
+
+    //PART 1: making interface
+
+ 	  makeInterface();
+
+    function makeInterface() {
+			zog("makeInterface");
+
+      const start = asset("background.png").centerReg().sca(.5);
+      const text = new Label({
+        text:"TANGRAM PUZZLES",
+        font:"OrangeSlices",
+        color:"white",
+        shadowColor:dark,
+        align:"center"
+      }).sca(2).center();
+
+      const button = new Button({
+        label:"GO",
+        width:100,
+        height:100,
+        backgroundColor:orange,
+        rollBackgroundColor:blue,
+        shadowColor:darker,
+        corner:50,
+      }).centerReg().mov(0,100)
+      .animate({
+        props:{scale:.5},
+        time:1,
+        rewind:true,
+        rewindWait:2,
+        loop:true,
+        loopWait:2,
+        ease:"backInOut"
+      }).wiggle("rotation",0,2,5,1,1.5);
+
+
+      button.on("click", ()=>{
+        button.removeFrom();
+        text.removeFrom();
+        start.removeFrom();
+        makeTans();
+
+      })
+
+      stage.update();
+
+		} // end of makeInterface
+
+// PART2: making 7 "tans"
+
+    //makeTans();
+
+    function makeTans(){
+
+      frame.color= white;
+      frame.outerColor = white;
+      background = asset("farm.jpg");
+      background.centerReg().mov(0,-150).sca(0).alp(0).animate({
+          props:{alpha:.3, scale:.2},
+          time:2,
+      });
+
+      box = new Container(200,200).centerReg().loc(932,117);
+
+      greenTri = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:"green",
+        borderColor:"dark"
+      }).center(box,1).rot(180).drag().loc(933,117);
+
+      orangeTri = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:"orange",
+        borderColor:"dark"
+      }).center(box,1).rot(-90).drag().loc(963,147);
+
+      purpleTri = new Triangle({
+        a:60,
+        b:60,
+        c:84.8524,
+        color:"purple",
+        borderColor:"dark"
+      }).center(box,1).rot(90).drag().loc(902,177);
+
+      redTri = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:"red",
+        borderColor:"dark"
+      }).center(box,1).rot(-45).drag().loc(902,147);
+
+
+      blackTri = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:"black",
+        borderColor:"dark"
+      }).center(box,1).rot(225).drag().loc(963,207);
+
+      brownSqu = new Rectangle (42.4264, 42.4264, "brown", "dark")
+      .center(box,1).rot(45).drag().loc(932,147);
+
+      blueDia = new Rectangle (42.4264, 60, "blue", "dark")
+      .center(box,1).ske(null,45).drag().loc(872,87);
+
+      help = new Button({
+        label:"?",
+        width:50,
+        height:50,
+        backgroundColor:blue.darken(.3),
+        rollBackgroundColor:blue,
+        corner:25,
+    }).center().loc(909,608);
+
+    help.on ("click", ()=>{
+        sign = asset("sign.png").center().sca(.1).loc(908,226).alp(0)
+          .animate({
+            props:{alpha:1},
+            time:.2,
+            rewind:true,
+            rewindWait:1,
+            loop:true,
+            loopWait:.2,
+            loopCount:2,
+            ease:"backInOut",
+          });
+
+        arrow = asset("arrow.png").center().sca(.1).loc(674,216).rot(10).alp(.8)
+        .animate({
+          props:{alpha:0},
+          time:2,
+        });
+
+        instructions = new Label({
+          text:"MOVE THE TANS TO MATCH THE SHAPE!",
+          font:"OrangeSlices",
+          size:30,
+          lineWidth:40,
+          color:blue.darken(.3),
+          align:"center",
+        }).center().loc(942,308)
+        .animate({
+          props:{alpha:0},
+          time:10,
+        });
+
+
+    });
+
+
+      makeShape();
+
+      matching();
+
+      //rotate tan by 45 degree per click
+      pieces = [greenTri,orangeTri,purpleTri,redTri,blackTri,brownSqu,blueDia];
+      loop(pieces, piece=>{
+        piece.tap(e=>{
+          e.target.rotation +=45;
+          stage.update();
+        })
+      })
+
+
+      stage.update();
+
+    }//end of makeTans
+
+
+// Part3: making target Shape
+
+    //makeShape()
+
+    function makeShape(){
+
+      box2 = new Container(200,200).centerReg().loc(517,462).sca(1);
+
+      greenRef = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:white,
+        borderColor:"green",
+        dashed:[10,5],
+      }).center(box2).rot(-45);
+
+
+      orangeRef = new Triangle({
+        a:120,
+        b:84.8524,
+        c:84.8524,
+        color:white,
+        borderColor:"orange",
+        dashed:[5,5]
+      }).alp(1).center(box2).rot(45).loc(57,52);
+
+
+      purpleRef = new Triangle({
+        a:60,
+        b:60,
+        c:84.8524,
+        color:white,
+        borderColor:"purple",
+        dashed:[5,5]
+      }).alp(1).center(box2).rot(-135).loc(38,31);
+
+      redRef = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:white,
+        borderColor:"red",
+        dashed:[5,5]
+      }).center(box2).rot(-135).loc(152,36);
+
+
+      blackRef = new Triangle({
+        a:42.4264,
+        b:42.4264,
+        c:60,
+        color:white,
+        borderColor:"grey",
+        dashed:[5,5]
+      }).center(box2).rot(135).loc(133,140);
+
+      brownRef = new Rectangle (42.4264, 42.4264, white, "brown", null, null, [5,5]).center(box2).rot(0).loc(121,36);
+
+      blueRef = new Rectangle (60,42.4264, white, "blue",null,null, [5,5]).center(box2).ske(null,45).loc(-7,31);
+
+      stage.update();
+
+    }//end of makeShape
+
+
+//Part4: move tans to match the target shape
+
+//    matching();
+    function matching(){
+
+     //make 3 points for each piece
+
+     greenP1 = new Circle(2,"black").centerReg();
+     greenP1.loc(503,449);
+     greenP2 = greenP1.clone().loc(504,505);
+     greenP3 = greenP1.clone().loc(557,451);
+     orangeP1 = greenP1.clone().loc(426,404);
+     orangeP2 = greenP1.clone().loc(486,406);
+     orangeP3 = greenP1.clone().loc(487,461);
+     brownP1 = greenP1.clone().loc(550,432);
+     brownP2 = greenP1.clone().loc(575,405);
+     brownP3 = greenP1.clone().loc(549,406);
+     purpleP1 = greenP1.clone().loc(454,365);
+     purpleP2 = greenP1.clone().loc(435,387);
+     purpleP3 = greenP1.clone().loc(471,387);
+     blueP1 = greenP1.clone().loc(418,420);
+     blueP2 = greenP1.clone().loc(443,443);
+     blueP3 = greenP1.clone().loc(418,437);
+     redP1 = greenP1.clone().loc(555,391);
+     redP2 = greenP1.clone().loc(586,392);
+     redP3 = greenP1.clone().loc(570,376);
+     blackP1= greenP1.clone().loc(541,490);
+     blackP2= greenP1.clone().loc(530,504);
+     blackP3= greenP1.clone().loc(540,513);
+
+     // add hitTestCircle  to each piece;
+
+     pieces = [greenTri,orangeTri,purpleTri,redTri,blackTri,brownSqu,blueDia];
+     reference = [greenRef,orangeRef,purpleRef,redRef,blackRef,brownRef,blueRef];
+     points = [greenP1, greenP2, greenP3, orangeP1, orangeP2, orangeP3, purpleP1, purpleP2, purpleP3,redP1, redP2, redP3, blackP1, blackP2, blackP3, brownP1, brownP2, brownP3, blueP1, blueP2, blueP3];
+
+    var num =0;
+     loop(pieces,(piece,i)=>{
+          var p=i*3;
+           piece.on("pressmove", ()=>{
+                   if(piece.hitTestCircle(points[p]) && piece.hitTestCircle(points[p+1]) && piece.hitTestCircle(points[p+2])){
+                     piece.removeFrom();
+                     reference[i].color = piece.color;
+                     reference[i].borderColor = clear;
+                     num=num+1;
+                     zog(num);
+                     if (num ==7){ makeAnimation() };
+                     stage.update();
+                   }
+           });
+    }, true);
+
+      stage.update();
+    }// end of matching
+
+// part5: celebrating the success
+
+  //  makeAnimation()
+
+    function makeAnimation(){
+
+      var star = new Emitter({
+        obj:new Poly(20,5,.6, [pink, red, green, orange, blue]),
+        num:5,
+      }).center();
+
+      timeout(1.5, ()=>{
+        box2.animate({
+          props:{alpha:0},
+          time:.7
+        });
+
+        sound = asset("sound.wav").play();
+
+        animal = new Sprite({json:asset("sprite.json")}).center().sca(.2).animate({
+          props:{scale:.8},
+          time:2
+        }).run({loop:true});
+
+        timeout(1, ()=>{
+            star.removeFrom();
+            help.removeFrom();
+            timeout(2,()=>{
+              makeRestart();
+            })
+        })
+
+      })
+
+
+    }// end of makeAnimation
+
+
+    // part 6: next and restart button
+
+    //makeRestart();
+    function makeRestart(){
+
+        const button2 = new Button({
+        label:"NEXT",
+        width:100,
+        height:100,
+        backgroundColor:orange,
+        rollBackgroundColor:blue,
+        shadowColor:darker,
+        corner:50,
+      }).center().mov(0,200);
+
+      restart = new Button({
+        label:" ",
+        width:50,
+        height:50,
+        backgroundColor:blue.darken(.3),
+        rollBackgroundColor:blue,
+        corner:25,
+    }).center().loc(909,608);
+
+    icon = asset("restart.png").center().sca(.2).loc(909,609);
+
+    restart.on("click",()=>{
+      makeTans();
+      animal.removeFrom();
+      button2.removeFrom();
+    })
+
+
+
+
+    }// end of restart
+
+
+
+    stage.update();
+
+}); // end of ready
+
+</script>
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>

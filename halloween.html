@@ -26,10 +26,13 @@ const width = 1024;
 const height = 768;
 const color = light; // ZIM colors like green, blue, pink, faint, clear, etc.
 const outerColor = dark; // any HTML colors like "violet", "#333", etc. are fine to use
-const assets = ["halloween.png","bat.png", "sign.png","arrow.png", "rooster.png",{font:"OrangeSlices",src:"Orange-Slices.otf"},{font:"OrangeSlicesOtline",src:"Orange-Slices-Otline.otf"}];
+const assets = ["halloween.png","bat.png", "bat2.png", "bat3.png", "sign.png","arrow.png", "rooster.png",
+                "correct.mp3","error.mp3","halloween-bg-music.wav",
+                {font:"OrangeSlices",src:"Orange-Slices.otf"}];
 const path = "assets/";
 
 const frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+
 frame.on("ready", () => { // ES6 Arrow Function - like function(){}
     zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
 
@@ -39,19 +42,60 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
 
     // USE THESE VARIABLES WHEN NEEDED BELOW
     let background;
+    let animal;
+    let toggleM;
     let box;
+    let pieces;
+    let reference;
+    let points;
+    let helpBtn;      let restartBtn;     let nextBtn;
+    let soundC;      let soundE;          let soundBG;
 
     //The variables of the basic shapes, total 10 pieces
-    let redShape;     let orangeShape;      let yellowShape;      let greenShape;     let cyanShape;
-    let blueShape;    let purpleShape;      let pinkShape;        let blackShape;     let brownShape;
+    let redShape;   let orangeShape;    let yellowShape;    let greenShape;   let cyanShape;
+    let blueShape;  let purpleShape;    let pinkShape;      let blackShape;   let brownShape;
 
     let redRef;     let orangeRef;      let yellowRef;      let greenRef;     let cyanRef;
     let blueRef;    let purpleRef;      let pinkRef;        let blackRef;     let brownRef;
 
+    let redP1;      let redP2;      let redP3;
+    let orangeP1;   let orangeP2;   let orangeP3;
+    let yellowP1;   let yellowP2;   let yellowP3;
+    let greenP1;    let greenP2;    let greenP3;
+    let cyanP1;     let cyanP2;     let cyanP3;
+    let blueP1;     let blueP2;     let blueP3;
+    let purpleP1;   let purpleP2;   let purpleP3;
+    let pinkP1;     let pinkP2;     let pinkP3;
+    let blackP1;    let blackP2;    let blackP3;
+    let brownP1;    let brownP2;    let brownP3;
+
     const angle = 45;
+
+    function playMusic(){
+        soundBG = asset("halloween-bg-music.wav").play({volume:.3, loop:true});
+    }
+
+
     //step1: load the background img
     loadBackgroud();
     function loadBackgroud(){
+
+      toggleM = new Toggle({label:new Label({text:"MUSIC",font:"OrangeSlices",color:"white"}), backgroundColor:"gold"})
+          .sca(.7)
+          .pos(80,50,LEFT,BOTTOM)
+          .change(function(e) { // this will start off
+            zog(soundBG);
+            zog(e.target.toggled);
+            if(e.target.toggled == true){
+              if (!soundBG){
+                soundBG = asset("halloween-bg-music.wav").play({volume:.3, loop:true});
+              }
+              soundBG.paused = true;
+            }else {
+              soundBG.paused = false;
+            }
+      });
+
       background = asset("halloween.png");
       background.centerReg().mov(0,-100).sca(0).alp(0)
       .animate({
@@ -65,40 +109,43 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
 
     //Step2: make a bat for reference
     function makeRefShape(){
-
       redRef = new Triangle({
         a:98.925,
         b:70.2748,
         c:70.2748,
         color:"white",
-        borderColor:"green",
+        borderColor:"tomato",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().rot(angle * 2).loc(450,320).outline();
+      }).alp(.7).centerReg().rot(angle * 2).loc(450,370);
 
       orangeRef = new Triangle({
         a:98.925,
         b:70.2748,
         c:70.2748,
         color:"white",
-        borderColor:"green",
+        borderColor:"orange",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().rot(angle * 6).loc(500,320);
+      }).alp(.7).centerReg().rot(angle * 6).loc(500,370);
 
       blueRef = new Rectangle({
         width:69.951,
         height:69.951,
         color:"white",
-        borderColor:"green",
+        borderColor:"cornflowerBlue",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().rot(angle).loc(475,370);
+      }).alp(.7).centerReg().rot(angle).loc(475,420);
 
       pinkRef = new Rectangle({
         width:69.951,
         height:69.951,
         color:"white",
-        borderColor:"green",
+        borderColor:"hotpink",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().loc(475,454);
+      }).alp(.7).centerReg().loc(475,504);
 
       greenRef = new Triangle({
         a:197.851,
@@ -106,53 +153,59 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
         c:140.0748,
         color:"white",
         borderColor:"green",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().loc(342,408);
+      }).alp(.7).centerReg().loc(342,458);
 
       cyanRef = new Triangle({
         a:197.851,
         b:140.0748,
         c:140.0748,
         color:"white",
-        borderColor:"green",
+        borderColor:"cyan",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().loc(608,408);
+      }).alp(.7).centerReg().loc(608,458);
 
       yellowRef = new Triangle({
         a:69.952,
         b:49.7493,
         c:49.7493,
         color:"white",
-        borderColor:"green",
+        borderColor:"yellow",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().rot(angle * 4).loc(244,476);
+      }).alp(.7).centerReg().rot(angle * 4).loc(244,526);
 
       brownRef = new Triangle({
         a:69.952,
         b:49.7493,
         c:49.7493,
         color:"white",
-        borderColor:"green",
+        borderColor:"yellowgreen",
+        borderWidth:3,
         dashed:[10,5]
-      }).alp(.5).centerReg().rot(angle * 4).loc(704,476);
+      }).alp(.7).centerReg().rot(angle * 4).loc(704,526);
 
       purpleRef = new Triangle({
         a:69.952,
         b:49.7493,
         c:49.7493,
         color:"white",
-        borderColor:"green",
+        borderColor:"purple",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().loc(440,508);
+      }).alp(.7).centerReg().loc(440,558);
 
       blackRef = new Triangle({
         a:69.952,
         b:49.7493,
         c:49.7493,
         color:"white",
-        borderColor:"green",
+        borderColor:"black",
+        borderWidth:2,
         dashed:[10,5]
-      }).alp(.5).centerReg().loc(510,508);
+      }).alp(.7).centerReg().loc(510,558);
 
       stage.update();
 
@@ -167,7 +220,7 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
         a:98.925,
         b:70.2748,
         c:70.2748,
-        color:"red",
+        color:"tomato",
         borderColor:"dark",
       }).centerReg().rot(angle * 4).drag().center(box);
 
@@ -182,7 +235,7 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
       blueShape = new Rectangle({
         width:69.951,
         height:69.951,
-        color:"CornflowerBlue",
+        color:"cornflowerBlue",
         borderColor:"dark"
       }).centerReg().rot(angle).drag().center(box).mov(49.4625,25);
 
@@ -221,7 +274,7 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
       pinkShape = new Rectangle({
         width:69.951,
         height:69.951,
-        color:"pink",
+        color:"hotpink",
         borderColor:"dark"
       }).centerReg().rot(angle).drag().center(box).mov(50,125);
 
@@ -237,82 +290,221 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
         a:69.952,
         b:49.7493,
         c:49.7493,
-        color:"greenYellow",
+        color:"yellowgreen",
         borderColor:"dark"
       }).centerReg().rot(angle * 5).drag().center(box).mov(112,163);
 
-      sign = asset("sign.png").center().sca(.1).loc(816,300).alp(0)
-        .animate({
-          props:{alpha:1},
-          time:.2,
-          rewind:true,
-          rewindWait:1,
-          loop:true,
-          loopWait:.2,
-          loopCount:5,
-          ease:"backInOut",
-      });
-
-      arrow = asset("arrow.png").center().sca(.1).loc(574,150).rot(10).alp(.8)
-      .animate({
-        props:{alpha:0},
-        time:10,
-      });
-
-      instructions = new Label({
-        text:"moving shapes to form a tangram bat",
-        font:"OrangeSlices",
-        size:30,
-        lineWidth:40,
-        color:blue.darken(.3),
-        align:"center",
-      }).center().loc(842,380)
-      .animate({
-        props:{alpha:0},
-        time:15,
-      }).wiggle("rotation",0,2,5,1,1.5);
-
       stage.update();
 
-      var pieces = [redShape, orangeShape, yellowShape, greenShape, cyanShape,
-                    blueShape, purpleShape, pinkShape, blackShape, brownShape];
+      pieces = [redShape, orangeShape, yellowShape, greenShape, cyanShape,
+                blueShape, purpleShape, pinkShape, blackShape, brownShape];
       loop(pieces, piece => {
         piece.tap(e => {
             piece.rotation += angle;
-            piece.level += 99;
             stage.update();
         });
       });
 
+      addHelpIntro();
 
-      addHitTestEvent();
     } // end step3
 
-    //step4: Add hitTest events
-    function addHitTestEvent(){
-      redShape.points = 3;
-      redRef.points = 3;
-      zogr("1="+redShape.points);
-      zogr("2="+redRef.points);
-      redShape.on("pressmove", function(){
-        if ( redShape.hitTestPoint(redRef.x, redRef.y)) {
-          if(redShape.x == redRef.x){
-            zogr("4=yes");
-          }
-          zogr("3=yes");
-        }else{
-          zogr("3=NO");
-        }
+    //step4: Add help introduction
+    function addHelpIntro(){
+      playMusic();
+
+      helpBtn = new Button({
+          label:"?",
+          width:50,
+          height:50,
+          backgroundColor:blue.darken(.3),
+          rollBackgroundColor:blue,
+          corner:25,
+      }).center().pos(80,50,RIGHT,BOTTOM);
+
+      helpBtn.on ("click", ()=>{
+          sign = asset("sign.png").center().sca(.1).loc(820,310).alp(0)
+            .animate({
+              props:{alpha:1},
+              time:.2,
+              rewind:true,
+              rewindWait:1,
+              loop:true,
+              loopWait:.2,
+              loopCount:2,
+              ease:"backInOut",
+            });
+
+          arrow = asset("arrow.png").center().sca(.1).loc(574,150).rot(10).alp(.8)
+          .animate({
+            props:{alpha:0},
+            time:2,
+          });
+
+          instructions = new Label({
+            text:"MOVE SHAPES TO FORM A TANGRAM BAT",
+            font:"OrangeSlices",
+            size:30,
+            lineWidth:40,
+            color:blue.darken(.3),
+            align:"center",
+          }).center().loc(842,400)
+          .animate({
+            props:{alpha:0},
+            time:10,
+          });
       });
 
+      stage.update();
+      addMatchEvent();
+    }
+
+    //step5: Add hitTest events
+    function addMatchEvent(){
+      redP1 = new Circle(2,clear).centerReg();
+      redP1.loc(460,370);
+      redP2 = redP1.clone().loc(430,340);
+      redP3 = redP1.clone().loc(430,400);
+      orangeP1 = redP1.clone().loc(490,370);
+      orangeP2 = redP1.clone().loc(520,340);
+      orangeP3 = redP1.clone().loc(520,400);
+      yellowP1 = redP1.clone().loc(224,516);
+      yellowP2 = redP1.clone().loc(265,516);
+      yellowP3 = redP1.clone().loc(244,536);
+      greenP1 = redP1.clone().loc(342,428);
+      greenP2 = redP1.clone().loc(265,498);
+      greenP3 = redP1.clone().loc(412,498);
+      cyanP1 = redP1.clone().loc(608,425);
+      cyanP2 = redP1.clone().loc(538,495);
+      cyanP3 = redP1.clone().loc(678,495);
+      blueP1 = redP1.clone().loc(475,390);
+      blueP2 = redP1.clone().loc(440,420);
+      blueP3 = redP1.clone().loc(510,420);
+      purpleP1 = redP1.clone().loc(440,550);
+      purpleP2 = redP1.clone().loc(420,570);
+      purpleP3 = redP1.clone().loc(460,570);
+      pinkP1 = redP1.clone().loc(450,480);
+      pinkP2 = redP1.clone().loc(500,480);
+      pinkP3 = redP1.clone().loc(450,530);
+      blackP1 = redP1.clone().loc(510,550);
+      blackP2 = redP1.clone().loc(490,570);
+      blackP3 = redP1.clone().loc(530,570);
+      brownP1 = redP1.clone().loc(704,536);
+      brownP2 = redP1.clone().loc(682,512);
+      brownP3 = redP1.clone().loc(726,512);
+
+
+
+      reference = [redRef, orangeRef, yellowRef, greenRef, cyanRef, blueRef, purpleRef, pinkRef, blackRef, brownRef];
+      points = [redP1, redP2, redP3, orangeP1, orangeP2, orangeP3, yellowP1, yellowP2, yellowP3, greenP1, greenP2, greenP3,
+                cyanP1, cyanP2, cyanP3, blueP1, blueP2, blueP3, purpleP1, purpleP2, purpleP3, pinkP1, pinkP2, pinkP3,
+                blackP1, blackP2, blackP3, brownP1, brownP2, brownP3];
+
+      var num =0;
+      loop(pieces,(piece,i) =>{
+            var p=i*3;
+             piece.on("pressmove", () =>{
+                     if(piece.hitTestCircle(points[p])
+                        && piece.hitTestCircle(points[p+1])
+                        && piece.hitTestCircle(points[p+2])){
+                          if(num < 10){
+                            soundC = asset("correct.mp3").play();
+                          }
+                       piece.removeFrom();
+                       reference[i].color = piece.color;
+                       reference[i].borderColor = clear;
+                       num = num + 1;
+                       //zog(num);
+                       if (num == 10){ makeAnimation() };
+                       stage.update();
+                     }
+             });
+      }, true);
+
+      stage.update();
     }
 
 
+    function makeAnimation(){
+      var star = new Emitter({
+        obj:new Poly(20,5,.6, [pink, red, green, orange, blue]),
+        num:5,
+      }).center();
+      soundC = asset("correct.mp3").play();
+
+      //.ord(1)
+      timeout(1.5, ()=>{
+        loop(reference, ref =>{
+          ref.animate({
+            props:{alpha:0},
+            time:.7
+          });
+        }, true);
+
+      animal = asset("bat.png").addTo();
+      animal.centerReg().mov(0,-50).sca(.1).alp(.3)
+      .animate({
+        props:{alpha:1,scale:1,y:500},
+        loop:true,
+        rewind:true,
+        wait:.5,
+        rewindWait:.5,
+        time:2
+      });
+      toggleM.top().ord(1);
+      background.animate({
+        props:{alpha:1},
+        time:.7,
+        ease:"linear"
+      });
+
+      timeout(2, ()=>{
+          star.removeFrom();
+          helpBtn.removeFrom();
+          timeout(2,()=>{
+            makeRestart();
+          });
+      });
+      stage.update();
+    });
+
+    stage.update();
+  }
+
+  function makeRestart(){
+
+    nextBtn = new Button({
+        label:new Label({text:"NEXT",font:"OrangeSlices",color:"white",size:24}),
+        width:100,
+        height:50,
+        backgroundColor:orange,
+        rollBackgroundColor:"gold",
+        shadowColor:darker,
+        corner:25,
+      }).center().pos(0,50,CENTER,BOTTOM);
+
+      restartBtn = new Button({
+        label:new Label({text:"RESTART",font:"OrangeSlices",color:"white",size:24}),
+        width:140,
+        height:50,
+        backgroundColor:blue.darken(.3),
+        rollBackgroundColor:blue,
+        corner:25,
+    }).center().pos(80,50,RIGHT,BOTTOM);
 
 
+    restartBtn.on("click",()=>{
+      animal.removeFrom();
+      nextBtn.removeFrom();
+      toggleM.dispose();
+      soundBG.paused = true;
+      restartBtn.removeFrom();
+      loadBackgroud();
+    });
+    stage.update();
+  }
 
-
-    stage.update(); // this is needed to show any changes
+stage.update(); // this is needed to show any changes
 
 }); // end of ready
 

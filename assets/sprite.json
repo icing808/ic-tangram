@@ -1,0 +1,24 @@
+{
+
+"images": [
+    "sprite.png"
+],
+
+"framerate": 20,
+"frames": [
+    [0, 0, 283, 283, 0, 141.5, 283],
+    [283, 0, 243, 273, 0, 121.5, 273],
+    [526, 0, 243, 273, 0, 121.5, 273],
+    [769, 0, 243, 273, 0, 121.5, 273],
+    [1012, 0, 243, 273, 0, 121.5, 273],
+    [1255, 0, 243, 273, 0, 121.5, 273],
+    [1498, 0, 243, 273, 0, 121.5, 273]
+],
+
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:ccb953cfebca526d47a7107bf30f82eb:c4a6142bc2e4541c1f60b2933864ee99:68d88b3cf7eafc9b5accfffdfb2fda91$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}
